@@ -11,10 +11,7 @@ import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.stax.lms.StaxSplitGenerator;
 import com.adaptris.stax.lms.StaxSplitGeneratorConfig;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import de.odysseus.staxon.json.JsonXMLConfig;
-import de.odysseus.staxon.json.JsonXMLConfigBuilder;
-import de.odysseus.staxon.json.JsonXMLInputFactory;
-import de.odysseus.staxon.json.JsonXMLOutputFactory;
+import de.odysseus.staxon.json.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.xml.stream.XMLEventFactory;
@@ -49,6 +46,9 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   @AdvancedConfig
   private Integer bufferSize;
 
+  @AdvancedConfig
+  private Boolean wrapWithArray;
+
   public JsonStreamingSplitter() {
 
   }
@@ -73,6 +73,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
               .withOriginalMessage(msg)
               .withJsonXMLConfig(config)
               .withXMLEventFactory(eventFactory)
+              .withWrapWithArray(wrapWithArray())
               .withXmlEventReader(reader)
               .withPath(thePath)
               .withInputReader(buf));
@@ -107,6 +108,18 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
     return path;
   }
 
+  public void setWrapWithArray(Boolean wrapWithArray) {
+    this.wrapWithArray = wrapWithArray;
+  }
+
+  public Boolean getWrapWithArray() {
+    return wrapWithArray;
+  }
+
+  protected boolean wrapWithArray() {
+    return getWrapWithArray() != null ? getWrapWithArray() : false;
+  }
+
   /**
    * Set the xpath-alike path to the element on which you want to split.
    * <p>
@@ -125,6 +138,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
     AdaptrisMessage originalMessage;
     JsonXMLConfig jsonXMLConfig;
     XMLEventFactory xmlEventFactory;
+    boolean wrapWithArray;
 
     JsonStreamingSplitGeneratorConfig withOriginalMessage(AdaptrisMessage msg) {
       originalMessage = msg;
@@ -136,6 +150,11 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
     }
     JsonStreamingSplitGeneratorConfig withXMLEventFactory(XMLEventFactory xmlEventFactory) {
       this.xmlEventFactory = xmlEventFactory;
+      return this;
+    }
+
+    JsonStreamingSplitGeneratorConfig withWrapWithArray(boolean wrapWithArray) {
+      this.wrapWithArray = wrapWithArray;
       return this;
     }
 
@@ -161,6 +180,9 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
       try (OutputStream output = splitMsg.getOutputStream()){
         XMLEventWriter writer = new JsonXMLOutputFactory(getConfig().jsonXMLConfig).createXMLEventWriter(output);
         writer.add(getConfig().xmlEventFactory.createStartDocument());
+        if(getConfig().wrapWithArray) {
+          writer.add(getConfig().xmlEventFactory.createProcessingInstruction(JsonXMLStreamConstants.MULTIPLE_PI_TARGET, event.asStartElement().getName().getLocalPart()));
+        }
         while (isNotEndElement(event, elementName) && getConfig().getXmlEventReader().hasNext()){
           writer.add(event);
           event = getConfig().getXmlEventReader().nextEvent();

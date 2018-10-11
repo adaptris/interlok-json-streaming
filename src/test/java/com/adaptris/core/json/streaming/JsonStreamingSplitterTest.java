@@ -38,6 +38,21 @@ public class JsonStreamingSplitterTest {
   }
 
   @Test
+  public void testDoServiceWrapWithArray() throws Exception {
+    JsonStreamingSplitter splitter = new JsonStreamingSplitter("/envelope/document");
+    splitter.setWrapWithArray(true);
+    AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload());
+    List<AdaptrisMessage> list = toList(splitter.splitMessage(msg));
+    assertEquals(3, list.size());
+    JSONAssert.assertEquals("{\"document\":[{\"nested\":0,\"array\":[5,6,7],\"object\":{\"something\":true}}]}",
+        list.get(0).getContent(), JSONCompareMode.STRICT_ORDER);
+    JSONAssert.assertEquals("{\"document\":[{\"nested\":1,\"value\":\"Another\"}]}",
+        list.get(1).getContent(), JSONCompareMode.STRICT_ORDER);
+    JSONAssert.assertEquals("{\"document\":[{\"nested\":2}]}",
+        list.get(2).getContent(), JSONCompareMode.STRICT_ORDER);
+  }
+
+  @Test
   public void testDoServiceInception() throws Exception {
     JsonStreamingSplitter splitter = new JsonStreamingSplitter("/envelope/document/nested");
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload());
