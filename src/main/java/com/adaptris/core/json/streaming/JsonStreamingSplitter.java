@@ -2,6 +2,7 @@ package com.adaptris.core.json.streaming;
 
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.DisplayOrder;
+import com.adaptris.annotation.InputFieldDefault;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.CoreException;
@@ -44,6 +45,10 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   private String path;
 
   @AdvancedConfig
+  @InputFieldDefault(value = "false")
+  private Boolean suppressPathNotFound;
+
+  @AdvancedConfig
   private Integer bufferSize;
 
   @AdvancedConfig
@@ -75,6 +80,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
               .withXMLEventFactory(eventFactory)
               .withWrapWithArray(wrapWithArray())
               .withXmlEventReader(reader)
+              .withSuppressPathNotFound(suppressPathNotFound())
               .withPath(thePath)
               .withInputReader(buf));
     }
@@ -118,6 +124,18 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
 
   protected boolean wrapWithArray() {
     return getWrapWithArray() != null ? getWrapWithArray() : false;
+  }
+
+  public Boolean getSuppressPathNotFound() {
+    return suppressPathNotFound;
+  }
+
+  public void setSuppressPathNotFound(Boolean suppressPathNotFound) {
+    this.suppressPathNotFound = suppressPathNotFound;
+  }
+
+  private boolean suppressPathNotFound(){
+    return getSuppressPathNotFound() != null ? getSuppressPathNotFound() : false;
   }
 
   /**
