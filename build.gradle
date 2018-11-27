@@ -9,8 +9,10 @@ ext {
   repoUsername = project.hasProperty('repoUsername') ? project.getProperty('repoUsername') : 'unknown'
   repoPassword = project.hasProperty('repoPassword') ? project.getProperty('repoPassword') : 'unknown'
   defaultNexusRepo = project.hasProperty('defaultNexusRepo') ? project.getProperty('defaultNexusRepo') : 'https://repo1.maven.org/maven2/'
+  offlineJavadocPackageDir = new File(project.buildDir, "offline-javadoc-packages")
+
   interlokJavadocs= project.hasProperty('interlokJavadocs') ? project.getProperty('interlokJavadocs') : javadocsBaseUrl + "/interlok-core/" + interlokCoreVersion
-  interlokCommonJavadocs= project.hasProperty('interlokJavadocs') ? project.getProperty('interlokJavadocs') : javadocsBaseUrl + "/interlok-common/" + interlokCoreVersion
+  interlokCommonJavadocs= project.hasProperty('interlokCommonJavadocs') ? project.getProperty('interlokCommonJavadocs') : javadocsBaseUrl + "/interlok-common/" + interlokCoreVersion
   componentName='Interlok JSON Streaming'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
@@ -48,7 +50,7 @@ version = releaseVersion
 def versionDir = "$buildDir/version"
 
 repositories {
-  jcenter()
+  mavenCentral()
   maven { url "$defaultNexusRepo" }
   maven { url "$nexusBaseUrl/content/groups/public" }
   maven { url "$nexusBaseUrl/content/repositories/snapshots" }
@@ -58,6 +60,7 @@ repositories {
 
 configurations {
   javadoc {}
+  offlineJavadocPackages {}
   all*.exclude group: 'c3p0'
   all*.exclude group: 'commons-logging'
   all*.exclude group: 'javamail'
@@ -92,6 +95,9 @@ dependencies {
   testCompile("org.skyscreamer:jsonassert:1.5.0")
 
   javadoc("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
+  offlineJavadocPackages ("com.adaptris:interlok-core:$interlokCoreVersion:javadoc@jar") { changing= true}
+  offlineJavadocPackages ("com.adaptris:interlok-common:$interlokCoreVersion:javadoc@jar") { changing= true}
+
 
 }
 
@@ -129,12 +135,23 @@ task generateVersion {
 }
 
 
+task offlinePackageList(type: Copy) {
+  description 'Build an offline package-list for javadocs'
+  group 'Documentation'
+
+  project.configurations.offlineJavadocPackages.collect { dependency ->
+    from(zipTree(dependency)) {
+      into dependency.name
+    }
+  }
+  include "package-list"
+  into offlineJavadocPackageDir
+}
+
 javadoc {
   configure(options) {
-      links = [
-        interlokJavadocs,
-        interlokCommonJavadocs,
-      ]
+    options.linksOffline(interlokJavadocs, offlineJavadocPackageDir.getCanonicalPath() + "/interlok-core-$interlokCoreVersion-javadoc.jar")
+    options.linksOffline(interlokCommonJavadocs, offlineJavadocPackageDir.getCanonicalPath() + "/interlok-common-$interlokCoreVersion-javadoc.jar")
     taglets = ["com.adaptris.taglet.ConfigTaglet", "com.adaptris.taglet.LicenseTaglet"]
     options.addStringOption "tagletpath", configurations.javadoc.asPath
     title= componentName
@@ -169,6 +186,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 check.dependsOn jacocoTestReport
+javadoc.dependsOn offlinePackageList
 
 artifacts {
   archives javadocJar
