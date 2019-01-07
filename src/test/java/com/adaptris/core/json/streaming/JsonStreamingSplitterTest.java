@@ -66,6 +66,7 @@ public class JsonStreamingSplitterTest {
   @Test(expected = CoreException.class)
   public void testSplit_NotFound() throws Exception {
     JsonStreamingSplitter splitter = new JsonStreamingSplitter("/envelope/document/x");
+    splitter.setSuppressPathNotFound(Boolean.FALSE);
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload());
     splitter.splitMessage(msg);
   }
