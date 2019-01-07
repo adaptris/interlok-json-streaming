@@ -89,7 +89,7 @@ public class JsonStreamingConfigBuilder {
 
   /**
    * 
-   * @param whether to convert element text to number/boolean/null primitives automatically; default is false if not specified.
+   * @param b whether to convert element text to number/boolean/null primitives automatically; default is false if not specified.
    */
   public void setAutoPrimitive(Boolean b) {
     this.autoPrimitive = b;

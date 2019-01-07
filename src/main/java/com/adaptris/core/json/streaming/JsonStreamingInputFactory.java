@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import de.odysseus.staxon.json.JsonXMLInputFactory;
 
 /**
- * {@code com.adaptris.stax.XmlInputFactoryBuilder} implementation that allows us to read JSON via standard {@code javax.xml.stream}
+ * {@link com.adaptris.stax.XmlInputFactoryBuilder} implementation that allows us to read JSON via standard {@code javax.xml.stream}
  * interfaces.
  * 
  * @config json-streaming-input

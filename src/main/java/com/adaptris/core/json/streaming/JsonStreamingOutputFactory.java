@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import de.odysseus.staxon.json.JsonXMLOutputFactory;
 
 /**
- * {@code com.adaptris.stax.XmlOutputFactoryBuilder} implementation that allows us to write JSON via standard
+ * {@link com.adaptris.stax.XmlOutputFactoryBuilder} implementation that allows us to write JSON via standard
  * {@code javax.xml.stream} interfaces.
  * 
  * @config json-streaming-output
