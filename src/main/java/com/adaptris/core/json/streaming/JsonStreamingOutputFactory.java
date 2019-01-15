@@ -12,6 +12,7 @@ import de.odysseus.staxon.json.JsonXMLOutputFactory;
  * {@code javax.xml.stream} interfaces.
  * 
  * @config json-streaming-output
+ * @since 3.8.3
  */
 @XStreamAlias("json-streaming-output")
 public class JsonStreamingOutputFactory extends JsonStreamBuilderImpl implements XmlOutputFactoryBuilder {

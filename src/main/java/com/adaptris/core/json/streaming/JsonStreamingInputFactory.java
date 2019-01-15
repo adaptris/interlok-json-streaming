@@ -12,7 +12,7 @@ import de.odysseus.staxon.json.JsonXMLInputFactory;
  * interfaces.
  * 
  * @config json-streaming-input
- *
+ * @since 3.8.3
  */
 @XStreamAlias("json-streaming-input")
 public class JsonStreamingInputFactory extends JsonStreamBuilderImpl implements XmlInputFactoryBuilder {
