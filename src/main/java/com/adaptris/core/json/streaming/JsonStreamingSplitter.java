@@ -10,6 +10,7 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.adaptris.annotation.AdvancedConfig;
@@ -132,7 +133,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   }
 
   protected boolean wrapWithArray() {
-    return getWrapWithArray() != null ? getWrapWithArray() : false;
+    return BooleanUtils.toBooleanDefaultIfNull(getWrapWithArray(), false);
   }
 
   public Boolean getSuppressPathNotFound() {
@@ -144,7 +145,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   }
 
   private boolean suppressPathNotFound(){
-    return getSuppressPathNotFound() != null ? getSuppressPathNotFound() : false;
+    return BooleanUtils.toBooleanDefaultIfNull(getSuppressPathNotFound(), false);
   }
 
   /**
