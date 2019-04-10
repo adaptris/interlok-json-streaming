@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * @author mwarman
@@ -63,6 +62,21 @@ public class JsonStreamingSplitterTest {
     }
   }
 
+  @Test
+  public void testDoServiceTypeLoss() throws Exception {
+    JsonStreamingSplitter splitter = new JsonStreamingSplitter("/envelope/document");
+    splitter.setJsonStreamingConfig(new JsonStreamingConfigBuilder().withAutoPrimitive(false));
+    AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage("{ \"envelope\" : { \"document\": [ { \"nested\" : \"0\"}, { \"nested\" : \"1\"}, { \"nested\" : \"3\"} ] } }");
+    List<AdaptrisMessage> list = toList(splitter.splitMessage(msg));
+    assertEquals(3, list.size());
+    JSONAssert.assertEquals("{\"document\":{\"nested\":\"0\"}}",
+            list.get(0).getContent(), JSONCompareMode.STRICT_ORDER);
+    JSONAssert.assertEquals("{\"document\":{\"nested\":\"1\"}}",
+            list.get(1).getContent(), JSONCompareMode.STRICT_ORDER);
+    JSONAssert.assertEquals("{\"document\":{\"nested\":\"3\"}}",
+            list.get(2).getContent(), JSONCompareMode.STRICT_ORDER);
+  }
+
   @Test(expected = CoreException.class)
   public void testSplit_NotFound() throws Exception {
     JsonStreamingSplitter splitter = new JsonStreamingSplitter("/envelope/document/x");
@@ -87,6 +101,17 @@ public class JsonStreamingSplitterTest {
     assertNull(splitter.getBufferSize());
     splitter.setBufferSize(1024);
     assertEquals(1024, splitter.bufferSize());
+  }
+
+  @Test
+  public void testJsonStreamingConfigBuilder() throws Exception {
+    JsonStreamingSplitter splitter = new JsonStreamingSplitter("/envelope/document");
+    assertTrue(splitter.getJsonStreamingConfig().autoArray());
+    assertTrue(splitter.getJsonStreamingConfig().autoPrimitive());
+    splitter = new JsonStreamingSplitter("/envelope/document");
+    splitter.setJsonStreamingConfig(new JsonStreamingConfigBuilder().withAutoPrimitive(false).withAutoArray(false));
+    assertFalse(splitter.getJsonStreamingConfig().autoArray());
+    assertFalse(splitter.getJsonStreamingConfig().autoPrimitive());
   }
 
   private static List<AdaptrisMessage> toList(Iterable<AdaptrisMessage> iter) {

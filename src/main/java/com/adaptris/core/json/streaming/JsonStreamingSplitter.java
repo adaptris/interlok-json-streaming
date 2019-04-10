@@ -54,6 +54,8 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   @NotBlank
   private String path;
 
+  private JsonStreamingConfigBuilder jsonStreamingConfig;
+
   @AdvancedConfig
   @InputFieldDefault(value = "false")
   private Boolean suppressPathNotFound;
@@ -65,7 +67,8 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   private Boolean wrapWithArray;
 
   public JsonStreamingSplitter() {
-
+    //set defaults for backwards compatibility reasons
+    jsonStreamingConfig = new JsonStreamingConfigBuilder().withAutoArray(true).withAutoPrimitive(true);
   }
 
   public JsonStreamingSplitter(String path) {
@@ -78,10 +81,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
       String thePath = msg.resolve(getPath());
       BufferedReader buf = new BufferedReader(msg.getReader(), bufferSize());
       XMLEventReader reader = new JsonXMLInputFactory().createXMLEventReader(buf);
-      JsonXMLConfig config = new JsonXMLConfigBuilder()
-          .autoArray(true)
-          .autoPrimitive(true)
-          .build();
+      JsonXMLConfig config = getJsonStreamingConfig().build();
       XMLEventFactory eventFactory = XMLEventFactory.newInstance();
       return new JsonStreamingSplitGenerator(
           new JsonStreamingSplitGeneratorConfig()
@@ -160,6 +160,14 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
    */
   public void setPath(String path) {
     this.path = Args.notBlank(path, "path");
+  }
+
+  public JsonStreamingConfigBuilder getJsonStreamingConfig() {
+    return jsonStreamingConfig;
+  }
+
+  public void setJsonStreamingConfig(JsonStreamingConfigBuilder jsonStreamingConfig) {
+    this.jsonStreamingConfig = Args.notNull(jsonStreamingConfig, "jsonStreamingConfig");
   }
 
   private class JsonStreamingSplitGeneratorConfig extends StaxSplitGeneratorConfig {
