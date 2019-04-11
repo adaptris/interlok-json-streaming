@@ -45,7 +45,7 @@ import de.odysseus.staxon.json.JsonXMLStreamConstants;
  * @author mwarman
  */
 @XStreamAlias("json-streaming-splitter")
-@DisplayOrder(order = {"path", "bufferSize"})
+@DisplayOrder(order = {"path", "bufferSize", "suppressPathNotFound", "wrapWithArray", "jsonStreamingConfig"})
 @ComponentProfile(since = "3.8.2")
 public class JsonStreamingSplitter extends MessageSplitterImp {
 
@@ -54,6 +54,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
   @NotBlank
   private String path;
 
+  @AdvancedConfig
   private JsonStreamingConfigBuilder jsonStreamingConfig;
 
   @AdvancedConfig
