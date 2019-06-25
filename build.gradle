@@ -4,12 +4,12 @@ plugins {
   id 'maven'
   id 'maven-publish'
   id  "jacoco"
-  id 'com.github.spotbugs' version '1.6.10'
+  id 'com.github.spotbugs' version '2.0.0'
 }
 
 ext {
-  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.8-SNAPSHOT'
-  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.8-SNAPSHOT'
+  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.9-SNAPSHOT'
+  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.9-SNAPSHOT'
   nexusBaseUrl = project.hasProperty('nexusBaseUrl') ? project.getProperty('nexusBaseUrl') : 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -25,7 +25,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.25'
-  jacksonVersion = "2.9.8"
+  jacksonVersion = "2.9.9"
   log4j2Version = "2.9.1"
 }
 
@@ -56,8 +56,7 @@ repositories {
   mavenCentral()
   maven { url "$defaultNexusRepo" }
   maven { url "$nexusBaseUrl/content/groups/public" }
-  maven { url "$nexusBaseUrl/content/repositories/snapshots" }
-  maven { url "$nexusBaseUrl/content/repositories/releases" }
+  maven { url "$nexusBaseUrl/content/groups/interlok" }
 }
 
 
@@ -166,7 +165,7 @@ javadoc {
 }
 
 jacoco {
-  toolVersion="0.8.1"
+  toolVersion="0.8.3"
 }
 
 jacocoTestReport {
