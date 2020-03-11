@@ -7,6 +7,10 @@ import com.adaptris.core.services.splitter.AdvancedMessageSplitterService;
 public class JsonSplitterTest extends ServiceCase {
 
   @Override
+  public boolean isAnnotatedForJunit4() {
+    return true;
+  }
+  @Override
   protected AdvancedMessageSplitterService retrieveObjectForSampleConfig() {
     AdvancedMessageSplitterService service = new AdvancedMessageSplitterService();
     service.setService(new ServiceList());

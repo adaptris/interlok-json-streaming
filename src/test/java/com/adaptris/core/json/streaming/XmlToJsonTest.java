@@ -1,14 +1,15 @@
 package com.adaptris.core.json.streaming;
 
 import com.adaptris.core.ServiceCase;
-import com.adaptris.core.StandaloneProducer;
-import com.adaptris.core.fs.FsProducer;
 import com.adaptris.stax.DefaultInputFactory;
-import com.adaptris.stax.DefaultWriterFactory;
 import com.adaptris.stax.StaxStreamingService;
 
 public class XmlToJsonTest extends ServiceCase {
 
+  @Override
+  public boolean isAnnotatedForJunit4() {
+    return true;
+  }
   @Override
   protected StaxStreamingService retrieveObjectForSampleConfig() {
     return new StaxStreamingService().withInputBuilder(new DefaultInputFactory())
