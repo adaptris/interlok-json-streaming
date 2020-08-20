@@ -1,15 +1,12 @@
 package com.adaptris.core.json.streaming;
 
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.ServiceList;
 import com.adaptris.core.services.splitter.AdvancedMessageSplitterService;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 
-public class JsonSplitterTest extends ServiceCase {
+public class JsonSplitterTest extends ExampleServiceCase {
 
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
+
   @Override
   protected AdvancedMessageSplitterService retrieveObjectForSampleConfig() {
     AdvancedMessageSplitterService service = new AdvancedMessageSplitterService();
@@ -17,5 +14,5 @@ public class JsonSplitterTest extends ServiceCase {
     service.setSplitter(new JsonStreamingSplitter("/path/to/nested/item"));
     return service;
   }
-  
+
 }

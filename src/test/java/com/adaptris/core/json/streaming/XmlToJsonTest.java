@@ -1,15 +1,11 @@
 package com.adaptris.core.json.streaming;
 
-import com.adaptris.core.ServiceCase;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 import com.adaptris.stax.DefaultInputFactory;
 import com.adaptris.stax.StaxStreamingService;
 
-public class XmlToJsonTest extends ServiceCase {
+public class XmlToJsonTest extends ExampleServiceCase {
 
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
   @Override
   protected StaxStreamingService retrieveObjectForSampleConfig() {
     return new StaxStreamingService().withInputBuilder(new DefaultInputFactory())
@@ -22,5 +18,5 @@ public class XmlToJsonTest extends ServiceCase {
   protected String createBaseFileName(Object object) {
     return super.createBaseFileName(object) + "-XML-JSON";
   }
-  
+
 }
