@@ -58,7 +58,7 @@ public class JsonConversionTest {
     assertEquals(3, xpath.selectNodeList(d, "/envelope/document").getLength());
   }
 
-  private static String unwrap(final String json) {
+  public static String unwrap(final String json) {
     if (json.startsWith("[") && json.endsWith("]")) {
       return json.substring(1, json.length() - 1);
     }
