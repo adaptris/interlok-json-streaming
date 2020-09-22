@@ -3,16 +3,13 @@ package com.adaptris.core.json.streaming;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.OutputStream;
-
+import javax.validation.constraints.NotBlank;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-
 import org.apache.commons.lang3.BooleanUtils;
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
@@ -26,9 +23,7 @@ import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.stax.lms.StaxSplitGenerator;
 import com.adaptris.stax.lms.StaxSplitGeneratorConfig;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import de.odysseus.staxon.json.JsonXMLConfig;
-import de.odysseus.staxon.json.JsonXMLConfigBuilder;
 import de.odysseus.staxon.json.JsonXMLInputFactory;
 import de.odysseus.staxon.json.JsonXMLOutputFactory;
 import de.odysseus.staxon.json.JsonXMLStreamConstants;
@@ -114,7 +109,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
    * @param b the buffer size (default is 8192).
    */
   public void setBufferSize(Integer b) {
-    this.bufferSize = b;
+    bufferSize = b;
   }
 
   protected int bufferSize() {
@@ -205,7 +200,7 @@ public class JsonStreamingSplitter extends MessageSplitterImp {
 
     @Override
     public void init(JsonStreamingSplitGeneratorConfig cfg){
-      this.factory = selectFactory(cfg.originalMessage);
+      factory = selectFactory(cfg.originalMessage);
     }
 
     @Override
