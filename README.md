@@ -6,3 +6,5 @@
 The suggested name was `potential-pancake`
 
 Streaming implementations of various JSON style services; will allow you to handle arbitrarily large JSON data.
+
+__Archived; since it is now part of http://github.com/adaptris/interlok-json__
